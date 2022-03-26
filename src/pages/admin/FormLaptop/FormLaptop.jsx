@@ -43,6 +43,17 @@ function FormLaptop({ edit }) {
     }));
   }
 
+  function handleChangeManuf(e) {
+    const idSelect = e.target.value;
+    const manufSelect = listManuf.find((item) => item.id === idSelect);
+    setDataLaptop((pre) => ({
+      ...pre,
+      manufId: manufSelect.id,
+      manufName: manufSelect.name,
+      manufCountry: manufSelect.country,
+    }));
+  }
+
   function handleCreate() {
     if (isManuf) dataLaptop.manufId = null;
     const data = convertDataFormToDataLaptop(dataLaptop);
@@ -59,7 +70,6 @@ function FormLaptop({ edit }) {
     }
   }
 
-
   useLayoutEffect(() => {
     getAllManuf().then((res) => setListManuf(res.data));
   }, []);
@@ -69,6 +79,8 @@ function FormLaptop({ edit }) {
       setDataLaptop((pre) => ({
         ...pre,
         manufId: listManuf[0].id,
+        manufName: listManuf[0].name,
+        manufCountry: listManuf[0].country,
       }));
     }
   }, [listManuf]);
@@ -155,9 +167,8 @@ function FormLaptop({ edit }) {
         </Grid>
         <Grid item xs={10}>
           <StyledSelect
-            name="manufId"
             disabled={isManuf}
-            onChange={handleChangeInput}
+            onChange={handleChangeManuf}
             defaultValue={1}
           >
             {listManuf &&
@@ -175,6 +186,7 @@ function FormLaptop({ edit }) {
           name="manufName"
           title="Name"
           placeholder="Name ..."
+          readonly={isManuf ? false : true}
         />
         <FormRowInput
           onChange={handleChangeInput}
@@ -182,6 +194,7 @@ function FormLaptop({ edit }) {
           name="manufCountry"
           title="Country"
           placeholder="Country ..."
+          readonly={isManuf ? false : true}
         />
       </Grid>
 

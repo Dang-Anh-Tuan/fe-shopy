@@ -8,6 +8,7 @@ function FormRowInput({
   type = "text",
   name,
   value,
+  readonly,
   onChange,
 }) {
   return (
@@ -22,6 +23,7 @@ function FormRowInput({
           placeholder={placeholder}
           name={name}
           value={value}
+          readOnly={readonly}
         ></StyledInput>
       </Grid>
     </>

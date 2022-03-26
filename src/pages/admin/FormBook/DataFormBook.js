@@ -2,12 +2,8 @@ export const initialData = {
   id: null,
   title: "",
   summary: "",
-	publicationDate : null,
-  numOfPage: 0,
+  num: 0,
   language: "",
-	dimensions: "",
-	weight: 0,
-	editor: "",
   publisher: {
     id: null,
     name: "",
@@ -16,11 +12,11 @@ export const initialData = {
   author: {
     id: null,
     name: "",
-    biography: "",
+    country: "",
   },
   category: {
     id: null,
-    type: "",
+    name: "",
   },
 };
 
@@ -32,9 +28,9 @@ export function convertDataBookToDataForm(dataBook) {
     publisherAddress: dataBook.publisher.address,
     authorId: dataBook.author.id,
     authorName: dataBook.author.name,
-    authorBiography: dataBook.author.biography,
+    authorCountry: dataBook.author.country,
     categoryId: dataBook.category.id,
-    categoryType: dataBook.category.type,
+    categoryName: dataBook.category.name,
   };
 
   delete res.publisher;
@@ -55,11 +51,11 @@ export function convertDataFormToDataBook(dataBookForm) {
     author: {
       id: dataBookForm.authorId,
       name: dataBookForm.authorName,
-      biography: dataBookForm.authorBiography,
+      country: dataBookForm.authorCountry,
     },
     category: {
       id: dataBookForm.categoryId,
-      type: dataBookForm.categoryType,
+      name: dataBookForm.categoryName,
     },
   };
 
@@ -68,9 +64,9 @@ export function convertDataFormToDataBook(dataBookForm) {
   delete res.publisherAddress;
   delete res.authorId;
   delete res.authorName;
-  delete res.authorBiography;
+  delete res.authorCountry;
   delete res.categoryId;
-  delete res.categoryType;
+  delete res.categoryName;
   return res;
 }
 

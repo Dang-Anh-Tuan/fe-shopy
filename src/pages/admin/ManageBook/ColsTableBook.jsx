@@ -8,7 +8,7 @@ export const colsTableBook = [
   { field: "authorName", headerName: "Author", width: 150 },
   { field: "language", headerName: "Language", width: 150 },
   { field: "publisherName", headerName: "Publisher", width: 150 },
-  { field: "categoryType", headerName: "Category", width: 150 },
+  { field: "categoryName", headerName: "Category", width: 150 },
   {
     field: "action",
     headerName: "Action",

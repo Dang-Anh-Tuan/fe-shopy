@@ -9,7 +9,12 @@ import {
 } from "../../../components/AdminPage/FormCreateProduct/FormCreateProduct.styled";
 import FormRowInput from "../../../components/AdminPage/FormCreateProduct/FormRowInput";
 import Button from "@mui/material/Button";
-import { convertDataBookToDataForm, convertDataFormToDataBook, initialData } from "./DataFormBook";
+import {
+  convertDataBookToDataForm,
+  convertDataFormToDataBook,
+  initialData,
+} from "./DataFormBook";
+import { createBook } from "../../../api/Book.api";
 
 function FormBook() {
   const initialDataBookForm = convertDataBookToDataForm(initialData);
@@ -25,13 +30,12 @@ function FormBook() {
     }));
   }
 
-  function handleCreate(){
-    if(isNewPublisher) dataBook.publisherId = null;
-    if(isNewAuthor) dataBook.authorId = null;
-    if(isNewCategory) dataBook.categoryId = null;
-    const data  = convertDataFormToDataBook(dataBook)
-    console.log(data);
-
+  function handleCreate() {
+    if (isNewPublisher) dataBook.publisherId = null;
+    if (isNewAuthor) dataBook.authorId = null;
+    if (isNewCategory) dataBook.categoryId = null;
+    const data = convertDataFormToDataBook(dataBook);
+    createBook(data)
   }
 
   return (
@@ -56,16 +60,8 @@ function FormBook() {
         />
         <FormRowInput
           onChange={handleChangeInput}
-          value={dataBook.publicationDate}
-          name="publicationDate"
-          type="date"
-          title="Publication Date"
-          placeholder="Publication Date ..."
-        />
-        <FormRowInput
-          onChange={handleChangeInput}
-          value={dataBook.numOfPage}
-          name="numOfPage"
+          value={dataBook.num}
+          name="num"
           type="number"
           title="Number Of Page"
           placeholder="Number Of Page ..."
@@ -76,28 +72,6 @@ function FormBook() {
           name="language"
           title="Language"
           placeholder="Language ..."
-        />
-        <FormRowInput
-          onChange={handleChangeInput}
-          value={dataBook.dimensions}
-          name="dimensions"
-          title="Dimensions"
-          placeholder="Dimensions ..."
-        />
-        <FormRowInput
-          onChange={handleChangeInput}
-          value={dataBook.weight}
-          name="weight"
-          type="number"
-          title="Weight"
-          placeholder="Weight ..."
-        />
-        <FormRowInput
-          onChange={handleChangeInput}
-          value={dataBook.editor}
-          name="editor"
-          title="Editor"
-          placeholder="Editor ..."
         />
       </Grid>
 
@@ -131,6 +105,7 @@ function FormBook() {
           name="publisherName"
           title="Name"
           placeholder="Name ..."
+          readonly={isNewPublisher ? false : true}
         />
         <FormRowInput
           onChange={handleChangeInput}
@@ -138,6 +113,7 @@ function FormBook() {
           name="publisherAddress"
           title="Address"
           placeholder="Address ..."
+          readonly={isNewPublisher ? false : true}
         />
       </Grid>
 
@@ -171,13 +147,15 @@ function FormBook() {
           name="authorName"
           title="Name"
           placeholder="Name ..."
+          readonly={isNewAuthor ? false : true}
         />
         <FormRowInput
           onChange={handleChangeInput}
-          value={dataBook.authorBiography}
-          name="authorBiography"
-          title="Biography"
-          placeholder="Biography ..."
+          value={dataBook.authorCountry}
+          name="authorCountry"
+          title="Country"
+          placeholder="Country ..."
+          readonly={isNewAuthor ? false : true}
         />
       </Grid>
 
@@ -207,10 +185,11 @@ function FormBook() {
 
         <FormRowInput
           onChange={handleChangeInput}
-          value={dataBook.categoryType}
-          name="categoryType"
-          title="Type"
+          value={dataBook.categoryName}
+          name="categoryName"
+          title="Name"
           placeholder="Name ..."
+          readonly={isNewCategory ? false : true}
         />
       </Grid>
 
