@@ -32,6 +32,22 @@ const theme = createTheme({
     MuiTypography: {
       variants: [
         {
+          props : {
+            variant: "body1"
+          },
+          style: {
+            fontSize : "1.4rem"
+          }
+        },
+        {
+          props : {
+            variant: "body2"
+          },
+          style: {
+            fontSize : "1.4rem"
+          }
+        },
+        {
           props: {
             variant: "u-regular-24",
           },
@@ -99,6 +115,15 @@ const theme = createTheme({
         },
         {
           props: {
+            variant: "u-bold-18",
+          },
+          style: {
+            fontSize: "1.8rem",
+            fontWeight: "bold",
+          },
+        },
+        {
+          props: {
             variant: "u-bold-16",
           },
           style: {
@@ -147,7 +172,7 @@ const theme = createTheme({
     MuiInputLabel: {
       styleOverrides: {
         root: {
-          fontSize: "2rem",
+          fontSize: "1.6rem",
         },
       },
     },

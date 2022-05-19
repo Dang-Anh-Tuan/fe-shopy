@@ -27,14 +27,25 @@ import { StyledListItemText } from "../../AdminPage/SideBar/SideBar.styled";
 import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { NavLink as RouterLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { openCart } from "../../../slices/cartSlice";
 
 const isLogin = false;
 
-export default function NavBar({ user, cartCount, isLogin, isAdmin }) {
+export default function NavBar({ user, isLogin, isAdmin }) {
+  const { listItem } = useSelector((state) => state.cart);
+
+  const dispatch = useDispatch();
+
+  const handleOpenCartSide = () => {
+    const action = openCart();
+    dispatch(action);
+  };
+
   return (
     <AppBar
       position="static"
-      sx={{ backgroundColor: "#fff", position: "fixed" , zIndex: 1000}}
+      sx={{ backgroundColor: "#fff", position: "fixed", zIndex: 1000 }}
     >
       <Toolbar>
         <Container
@@ -80,11 +91,14 @@ export default function NavBar({ user, cartCount, isLogin, isAdmin }) {
 
           <StyledRightNavWrapper>
             {!isAdmin && (
-              <StyledIconButton sx={{ position: "relative" }}>
+              <StyledIconButton
+                sx={{ position: "relative" }}
+                onClick={handleOpenCartSide}
+              >
                 <ShoppingCartCheckoutIcon sx={{ fontSize: "inherit" }} />
-                {cartCount && (
+                {listItem && (
                   <StyledCartCount>
-                    <span>{cartCount}</span>
+                    <span>{listItem.length}</span>
                   </StyledCartCount>
                 )}
               </StyledIconButton>

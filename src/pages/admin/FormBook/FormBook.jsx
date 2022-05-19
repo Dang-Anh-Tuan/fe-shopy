@@ -1,5 +1,5 @@
 import { Checkbox, Grid } from "@mui/material";
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import FormCreateProduct from "../../../components/AdminPage/FormCreateProduct/FormCreateProduct";
 import {
   StyledHeadingGroup,
@@ -14,14 +14,33 @@ import {
   convertDataFormToDataBook,
   initialData,
 } from "./DataFormBook";
-import { createBook } from "../../../api/Book.api";
+import {
+  createBook,
+  getAllAuthor,
+  getAllCategory,
+  getAllPublisher,
+  getDetailBook,
+  updateBook,
+} from "../../../api/Book.api";
+import Toaster from "../../../components/Toaster/Toaster";
+import { useParams } from "react-router-dom";
 
-function FormBook() {
+function FormBook({ edit }) {
   const initialDataBookForm = convertDataBookToDataForm(initialData);
   const [dataBook, setDataBook] = useState(initialDataBookForm);
+  const [listAuthor, setListAuthor] = useState([]);
+  const [listPublisher, setListPublisher] = useState([]);
+  const [listCategory, setListCategory] = useState([]);
   const [isNewPublisher, setIsNewPublisher] = useState(false);
   const [isNewAuthor, setIsNewAuthor] = useState(false);
   const [isNewCategory, setIsNewCategory] = useState(false);
+  const [toaster, setToaster] = useState({
+    openToast: false,
+    severity: "success",
+    message: "",
+  });
+
+  const { id } = useParams();
 
   function handleChangeInput(e) {
     setDataBook((pre) => ({
@@ -30,13 +49,100 @@ function FormBook() {
     }));
   }
 
+  function handleChangePublisher(e) {
+    const idSelect = e.target.value;
+    const publisherSelected = listPublisher.find((item) => item.id == idSelect);
+    setDataBook((pre) => ({
+      ...pre,
+      publisherId: publisherSelected.id,
+      publisherName: publisherSelected.name,
+      publisherAddress: publisherSelected.address,
+    }));
+  }
+
+  function handleChangeAuthor(e) {
+    const idSelect = e.target.value;
+    const authorSelected = listAuthor.find((item) => item.id == idSelect);
+    setDataBook((pre) => ({
+      ...pre,
+      authorId: authorSelected.id,
+      authorName: authorSelected.name,
+      authorCountry: authorSelected.country,
+    }));
+  }
+
+  function handleChangeCategory(e) {
+    const idSelect = e.target.value;
+    const categorySelected = listCategory.find((item) => item.id == idSelect);
+    setDataBook((pre) => ({
+      ...pre,
+      categoryId: categorySelected.id,
+      categoryName: categorySelected.name,
+    }));
+  }
+
   function handleCreate() {
     if (isNewPublisher) dataBook.publisherId = null;
     if (isNewAuthor) dataBook.authorId = null;
     if (isNewCategory) dataBook.categoryId = null;
     const data = convertDataFormToDataBook(dataBook);
-    createBook(data)
+    if (edit) {
+      updateBook(id, data).then((res) => {
+        setToaster((pre) => ({
+          openToast: true,
+          severity: "success",
+          message: "Edit book success",
+        }));
+      });
+    } else {
+      createBook(data).then((res) => {
+        setToaster((pre) => ({
+          openToast: true,
+          severity: "success",
+          message: "Add new book success",
+        }));
+      });
+    }
   }
+
+  useLayoutEffect(() => {
+    getAllAuthor().then((res) => setListAuthor(res.data));
+    getAllPublisher().then((res) => setListPublisher(res.data));
+    getAllCategory().then((res) => setListCategory(res.data));
+  }, []);
+
+  useLayoutEffect(() => {
+    if (listAuthor.length > 0) {
+      setDataBook((pre) => ({
+        ...pre,
+        authorId: listAuthor[0].id,
+        authorName: listAuthor[0].name,
+        authorCountry: listAuthor[0].country,
+      }));
+    }
+    if (listPublisher.length > 0) {
+      setDataBook((pre) => ({
+        ...pre,
+        publisherId: listPublisher[0].id,
+        publisherName: listPublisher[0].name,
+        publisherAddress: listPublisher[0].address,
+      }));
+    }
+    if (listCategory.length > 0) {
+      setDataBook((pre) => ({
+        categoryId: listCategory[0].id,
+        categoryName: listCategory[0].name,
+      }));
+    }
+  }, [listAuthor, listCategory, listPublisher]);
+
+  useLayoutEffect(() => {
+    if (edit) {
+      getDetailBook(id).then((res) =>
+        setDataBook(convertDataBookToDataForm(res.data))
+      );
+    }
+  }, [edit, id]);
 
   return (
     <FormCreateProduct>
@@ -91,11 +197,17 @@ function FormBook() {
           <StyledLabel variant="u-regular-20">Publisher : </StyledLabel>
         </Grid>
         <Grid item xs={10}>
-          <StyledSelect value={dataBook.publisherId} disabled={isNewPublisher}>
-            <StyledOption value="1">Kim dong</StyledOption>
-            <StyledOption value="1">Kim dong</StyledOption>
-
-            <StyledOption value="1">Kim dong</StyledOption>
+          <StyledSelect
+            value={dataBook.publisherId}
+            disabled={isNewPublisher}
+            onChange={handleChangePublisher}
+          >
+            {listPublisher &&
+              listPublisher.map((item, index) => (
+                <StyledOption key={index} value={item.id}>
+                  {item.name}
+                </StyledOption>
+              ))}
           </StyledSelect>
         </Grid>
 
@@ -133,11 +245,17 @@ function FormBook() {
           <StyledLabel variant="u-regular-20">Author : </StyledLabel>
         </Grid>
         <Grid item xs={10}>
-          <StyledSelect value={dataBook.authorId} disabled={isNewAuthor}>
-            <StyledOption value="1">NamCao</StyledOption>
-            <StyledOption value="1">NamCao</StyledOption>
-
-            <StyledOption value="1">NamCao</StyledOption>
+          <StyledSelect
+            value={dataBook.authorId}
+            disabled={isNewAuthor}
+            onChange={handleChangeAuthor}
+          >
+            {listAuthor &&
+              listAuthor.map((item, index) => (
+                <StyledOption key={index} value={item.id}>
+                  {item.name}
+                </StyledOption>
+              ))}
           </StyledSelect>
         </Grid>
 
@@ -175,11 +293,17 @@ function FormBook() {
           <StyledLabel variant="u-regular-20">Category : </StyledLabel>
         </Grid>
         <Grid item xs={10}>
-          <StyledSelect value={dataBook.categoryId} disabled={isNewCategory}>
-            <StyledOption value="1">Khoa hoc</StyledOption>
-            <StyledOption value="1">Nghe Thuat</StyledOption>
-
-            <StyledOption value="1">Ther</StyledOption>
+          <StyledSelect
+            value={dataBook.categoryId}
+            disabled={isNewCategory}
+            onChange={handleChangeCategory}
+          >
+            {listCategory &&
+              listCategory.map((item, index) => (
+                <StyledOption key={index} value={item.id}>
+                  {item.name}
+                </StyledOption>
+              ))}
           </StyledSelect>
         </Grid>
 
@@ -208,6 +332,11 @@ function FormBook() {
           </Button>
         </Grid>
       </Grid>
+      <Toaster
+        openToast={toaster.openToast}
+        severity={toaster.severity}
+        message={toaster.message}
+      />
     </FormCreateProduct>
   );
 }

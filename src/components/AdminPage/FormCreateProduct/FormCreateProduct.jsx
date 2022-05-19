@@ -1,14 +1,8 @@
-import { FormControl, Grid } from "@mui/material";
+import { FormControl } from "@mui/material";
 import React from "react";
 import {
-  FormContainer,
-  StyledHeadingGroup,
-  StyledInput,
-  StyledLabel,
-  StyledOption,
-  StyledSelect,
+  FormContainer
 } from "./FormCreateProduct.styled";
-import FormRowInput from "./FormRowInput";
 
 function FormCreateProduct({ children }) {
   return (

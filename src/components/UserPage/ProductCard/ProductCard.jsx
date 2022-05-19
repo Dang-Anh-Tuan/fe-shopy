@@ -1,14 +1,19 @@
-import { Button, Paper, Rating, Typography, Box } from "@mui/material";
-import React from "react";
-import { ProductImage } from "./ProductCard.styled";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import { Box, Button, Paper, Rating, Typography } from "@mui/material";
+import React from "react";
+import { Link } from "react-router-dom";
+import { ProductImage } from "./ProductCard.styled";
 
-export default function ProductCard({ name, price, rate }) {
+export default function ProductCard({ product }) {
+  const { id, img, name, price, rate } = product;
   return (
-    <Paper elevation={3}>
-      <ProductImage
-        src={"https://cf.shopee.vn/file/4a70fc0c2ae31337cecf9b38aee826ea"}
-      ></ProductImage>
+    <Paper
+      to={`/products/${id}`}
+      elevation={3}
+      component={Link}
+      style={{ textDecoration: "none", display: "block" }}
+    >
+      <ProductImage src={img}></ProductImage>
       <Box padding={1}>
         <Typography variant="h4" component="h3" marginBottom={2} marginTop={2}>
           {name}
@@ -49,7 +54,7 @@ export default function ProductCard({ name, price, rate }) {
               padding: "8px",
             }}
           >
-            <AddShoppingCartIcon sx={{fontSize: '2rem'}}/>
+            <AddShoppingCartIcon sx={{ fontSize: "2rem" }} />
           </Button>
         </Box>
       </Box>

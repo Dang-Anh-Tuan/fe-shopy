@@ -45,7 +45,8 @@ function FormLaptop({ edit }) {
 
   function handleChangeManuf(e) {
     const idSelect = e.target.value;
-    const manufSelect = listManuf.find((item) => item.id === idSelect);
+    const manufSelect = listManuf.find((item) => item.id == idSelect);
+    console.log(manufSelect);
     setDataLaptop((pre) => ({
       ...pre,
       manufId: manufSelect.id,
@@ -58,7 +59,13 @@ function FormLaptop({ edit }) {
     if (isManuf) dataLaptop.manufId = null;
     const data = convertDataFormToDataLaptop(dataLaptop);
     if (edit) {
-      updateLaptop(id, data);
+      updateLaptop(id, data).then((res) => {
+        setToaster((pre) => ({
+          openToast: true,
+          severity: "success",
+          message: "Edit laptop success",
+        }));
+      });
     } else {
       createLaptop(data).then((res) => {
         setToaster((pre) => ({

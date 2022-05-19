@@ -1,10 +1,12 @@
+import { Provider } from "react-redux";
+import store from "./redux/store";
 import Routers from "./Router/Routers";
 
 function App() {
   return (
-    <div >
+    <Provider store={store}>
       <Routers />
-    </div>
+    </Provider>
   );
 }
 
